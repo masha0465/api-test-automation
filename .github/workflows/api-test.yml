@@ -1,0 +1,23 @@
+name: Run API Tests with Newman
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  newman:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Postman collection with Newman
+        uses: matt-ball/newman-action@master
+        with:
+          collection: collections/pnp_api_collection.json
+          # 환경 파일이 있으면 아래 줄의 주석을 해제
+          # environment: collections/pnp_api_env.json
