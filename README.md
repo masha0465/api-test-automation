@@ -1,6 +1,6 @@
 # api-test-automation
 
-API 테스트 자동화 설계
+* API 테스트 자동화 설계
 
 Postman에서 pnp_api의 주요 엔드포인트(로그인, 데이터 조회, 등록 등)를 컬렉션으로 구성
 
@@ -8,13 +8,13 @@ Postman에서 pnp_api의 주요 엔드포인트(로그인, 데이터 조회, 등
 
 환경(Environment) 파일을 활용해 base_url, 토큰 등 환경별 변수 관리
 
-수동 테스트 → 자동화 전환
+* 수동 테스트 → 자동화 전환
 
 Postman Collection Runner로 반복 테스트 및 데이터 기반 테스트 수행
 
 컬렉션과 환경 파일을 JSON으로 내보내 Newman에서 활용
 
-Newman 기반 커맨드라인 자동화
+* Newman 기반 커맨드라인 자동화
 
 Newman을 전역 설치(npm install -g newman)
 
@@ -22,7 +22,7 @@ Newman을 전역 설치(npm install -g newman)
 
 실패 시 로그 및 상세 리포트로 원인 분석
 
-CI/CD 파이프라인 구축
+* CI/CD 파이프라인 구축
 
 GitHub에 저장소 생성 및 버전 관리 체계 수립
 
