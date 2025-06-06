@@ -1,0 +1,5139 @@
+{
+	"info": {
+		"_postman_id": "11e52a75-6bfd-42e5-b07d-7a7933172b26",
+		"name": "DBSAFER API [v1.0.78]",
+		"description": "# 🧪 Get started here\n\nPostman's powerful scripting feature helps you to write a range of API tests in JavaScript, including integration, regression, and contract tests.\n\nThis template demonstrates how to work with the Postman basic test syntax to test a single HTTP API request.\n\n## 🔖 How to use this template?\n\n#### Step 1: Send requests\n\nSend the sample requests and view the response and test results.\n\n#### Step 2: Update the sample request URL\n\nReplace the sample request URLs with your desired API endpoints.\n\n#### Step 3: Customize tests\n\nCustomize the tests in the \"Tests\" tab if needed. Don't forget to save your changes.\n\n## 💪 Quick tips for writing tests\n\n- Organize your test scenarios by grouping your requests in [collections](https://www.getpostman.com/docs/v6/postman/collections/intro_to_collections) and [folders](https://www.getpostman.com/docs/v6/postman/collections/managing_collections#adding-folders), and naming them descriptively\n    \n- Document your API’s requirements using [markdown in the descriptions](https://www.getpostman.com/docs/v6/postman/collections/using_markdown_for_descriptions)\n    \n- Use [variables](https://www.getpostman.com/docs/v6/postman/environments_and_globals/variables) to simulate more sophisticated user flows\n    \n- Common tests that will be run after every request can be added to collection-level tests or folder-level tests\n    \n\n## ℹ️ Resources\n\n- [Test scripts](https://www.getpostman.com/docs/v6/postman/scripts/test_scripts)\n    \n- [Test examples](https://www.getpostman.com/docs/v6/postman/scripts/test_examples)\n    \n- [Quick reference guide](https://community.getpostman.com/t/the-postman-cheatsheet-quick-reference-guide/1054)\n    \n- [Examples and guides](https://github.com/DannyDainton/All-Things-Postman)\n    \n- [Writing tests in Postman](http://blog.getpostman.com/2017/10/25/writing-tests-in-postman/)\n    \n- [API testing tips from a Postman professional](http://blog.getpostman.com/2017/07/28/api-testing-tips-from-a-postman-professional/)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38515816"
+	},
+	"item": [
+		{
+			"name": "인증 API",
+			"item": [
+				{
+					"name": "1.1인증토큰 발급",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var json_data = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"AccessToken\", json_data.accessToken)",
+									"console.log(json_data)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"managerId\": \"{{ManagerID}}\",\n    \"managerPassword\": \"{{ManagerPW}}\" \n}\n\n// {\n//     \"managerId\": \"admin\",\n//     \"managerPassword\": \"\" \n// }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/auth/token",
+							"protocol": "https",
+							"host": [
+								"{{Host}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"dbsafer",
+								"api",
+								"v1",
+								"auth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.2인증토큰 발급(V2)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// pm.test(\"Print response data\", function () {",
+									"//     console.log(\"Access Token: \" + pm.response.json().accessToken);",
+									"//     console.log(\"Access Token Expired At: \" + pm.response.json().accessTokenExpiredAt);",
+									"//     console.log(\"Refresh Token: \" + pm.response.json().refreshToken);",
+									"//     console.log(\"Refresh Token Expired At: \" + pm.response.json().refreshTokenExpiredAt);",
+									"//     console.log(\"Token Type: \" + pm.response.json().tokenType);",
+									"// });",
+									"",
+									"pm.test(\"Set Token\", function(){",
+									"    pm.collectionVariables.set(\"AccessToken(v2)\", pm.response.json().accessToken)",
+									"    pm.collectionVariables.set(\"refreshToken\", pm.response.json().refreshToken)",
+									"})",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AccessToken(v2)}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"managerId\": \"{{ManagerID}}\",\n    \"managerPassword\": \"{{SecretKey}}\",\n    \"grantType\" : \"AUTH_USER\",\n    \"clientId\" : \"{{ClientID}}\"\n}\n\n// {\n//     \"managerId\": \"admin\",\n//     \"managerPassword\": \"LpzdAchPkcdqZbAb3Vx+6Q==\",\n//     \"grantType\" : \"AUTH_USER\",\n//     \"clientId\" : \"test_client\"\n// }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v2/auth/token",
+							"protocol": "https",
+							"host": [
+								"{{Host}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"dbsafer",
+								"api",
+								"v2",
+								"auth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.3인증토큰 재발급(V2)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Set Refresh Token\", function(){",
+									"    pm.collectionVariables.set(\"refreshToken\", pm.response.json().refreshToken)",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"grantType\" : \"REFRESH_TOKEN\",\n    \"clientId\" : \"{{ClientID}}\",\n    \"refreshToken\": \"{{refreshToken}}\"\n}\n\n// {\n//     \"grantType\" : \"REFRESH_TOKEN\",\n//     \"clientId\" : \"test_client\",\n//     \"refreshToken\": \"\"\n// }\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v2/auth/token",
+							"protocol": "https",
+							"host": [
+								"{{Host}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"dbsafer",
+								"api",
+								"v2",
+								"auth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.4암호키 발급",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/security/public-key",
+							"protocol": "https",
+							"host": [
+								"{{Host}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"dbsafer",
+								"api",
+								"v1",
+								"security",
+								"public-key"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "사용자 관리 API",
+			"item": [
+				{
+					"name": "사용자 관리",
+					"item": [
+						{
+							"name": "1.1 사용자 목록 조회",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// pm.test(\"응답 필드 확인\", function(){",
+											"//     let res = pm.response.json();",
+											"//     let keys = [\"id\", \"name\", \"department\", \"departmentCode\", ",
+											"//                 \"jobPosition\", \"jobTitle\", \"phoneNumber\",",
+											"//                 \"mobilePhoneNumber\", \"email\", \"firstAuthType\", ",
+											"//                 \"secondAuthType\", \"comment\", \"startDate\", \"endDate\",",
+											"//                 \"createDate\", \"passwordChangeDate\", \"lock\", \"lockReason\"]",
+											"    ",
+											"//     res.results.forEach(function(user) {",
+											"//         pm.expect(user).to.have.keys(keys).or.throw(\"One or more required fields are missing\");",
+											"//     });",
+											"// });",
+											"",
+											"",
+											"pm.test(\"상태코드 200 체크\",function(){",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"응답 길이 확인\", function () {",
+											"    let res = pm.response.json().results;",
+											"    const res_length = Object.entries(res).length;",
+											"    pm.expect(res_length).to.eql(10000, \"if res_length == 10000 is passed else failed\");",
+											"});",
+											"",
+											"",
+											"",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/users/",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"users",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "1.2 사용자 조회",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// 응답코드 ",
+											"pm.test(\"응답코드 확인: \",function(){",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// 응답 Fields 중 Required 항목들 존재하는지 확인 ",
+											"pm.test(\"응답 필드 확인: \", function(){",
+											"    let res = pm.response.json();",
+											"    console.log(res);",
+											"    let keys = ['id', 'name', \"department\", \"departmentCode\", ",
+											"                \"jobPosition\", \"jobTitle\", \"phoneNumber\",",
+											"                \"mobilePhoneNumber\", \"email\", \"firstAuthType\", ",
+											"                \"secondAuthType\", \"comment\", \"startDate\", \"endDate\",",
+											"                \"createDate\", \"passwordChangeDate\", \"lock\", \"lockReason\"]",
+											"    pm.expect(res).to.have.keys(keys)",
+											"});",
+											"",
+											"",
+											"// 응답 콘텐츠 타입 ",
+											"pm.test(\"Response Content-Type is application/json\", function () {",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+											"});",
+											"",
+											"// 이메일 형식 확인 ",
+											"pm.test(\"Email is in a valid format\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData.email).to.be.a('string');",
+											"    pm.expect(responseData.email).to.match(/^.+@.+\\..+$/);",
+											"});",
+											"",
+											"",
+											"pm.test(\"StartDate and EndDate are in valid date format\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    // pm.expect(responseData.startDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"    pm.expect(responseData.startDate).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$/);",
+											"    // pm.expect(responseData.endDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"    pm.expect(responseData.endDate).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$/);",
+											"});",
+											"",
+											"// pm.test(\"Lock is a boolean value\", function () {",
+											"//     const responseData = pm.response.json();",
+											"    ",
+											"//     pm.expect(responseData).to.be.an('object');",
+											"//     pm.expect(responseData.lock).to.be.a('boolean');",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"LockReason is a non-empty string\", function () {",
+											"//   const responseData = pm.response.json();",
+											"  ",
+											"//   pm.expect(responseData).to.be.an('object');",
+											"//   pm.expect(responseData.lockReason).to.be.a('string').and.to.have.lengthOf.at.least(1, \"LockReason should be a non-empty string\");",
+											"// });",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/users/test1",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"users",
+										"test1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "1.3 사용자 추가",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('상태코드 확인:', function () {",
+											"    pm.response.to.have.status(201);",
+											"})",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"followOriginalHttpMethod": false
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// {\n//     \"id\": \"{{id}}\",\n//     \"password\": \"{{password}}\",\n//     \"name\": \"{{name}}\",\n//     \"department\": \"{{department}}\",\n//     \"departmentCode\": \"{{departmentCode}}\",\n//     \"jobPosition\": \"{{jobPosition}}\",\n//     \"jobTitle\": \"{{jobTitle}}\",\n//     \"phoneNumber\": \"{{phoneNumber}}\",\n//     \"mobilePhoneNumber\": \"{{mobilePhoneNumber}}\",\n//     \"email\": \"{{email}}\",\n//     \"firstAuthType\": \"{{firstAuthType}}\",\n//     \"secondAuthType\": \"{{secondAuthType}}\",\n//     \"comment\": \"{{name}}\",\n//     \"startDate\": \"{{startDate}}\",\n//     \"endDate\": \"{{endDate}}\"\n// }\n\n{\n  \"id\" : \"gdhong001\",\n  \"password\" : \"cGFzc3dvcmQ=\",\n  \"name\" : \"홍길동\",\n  \"department\" : \"개발 1팀\",\n  \"departmentCode\" : \"0001\",\n  \"jobPosition\" : \"책임연구원\",\n  \"jobTitle\" : \"파트장\",\n  \"phoneNumber\" : \"031-123-4567\",\n  \"mobilePhoneNumber\" : \"010-1234-5678\",\n  \"email\" : \"gdhong@pnpsecure.com\",\n  \"firstAuthType\" : \"NONE\",\n  \"secondAuthType\" : \"NONE\",\n  \"comment\" : \"Sample Account\",\n  \"startDate\" : \"2022-01-01T00:00:00\",\n  \"endDate\" : \"2025-12-31T23:59:59\"\n}\n\n\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/users",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "1.4 사용자 수정",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check status\",function(){",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// // 초기 id 값 설정\r",
+											"// pm.variables.set(\"currentId\", 1235);\r",
+											"\r",
+											"// // 각 요청마다 id 값을 증가시키는 함수\r",
+											"// function increaseId() {\r",
+											"//     let currentId = pm.variables.get(\"currentId\");\r",
+											"//     currentId++;\r",
+											"//     pm.variables.set(\"currentId\", currentId);\r",
+											"// }"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"password\" : \"cGFzc3dvcmQ=\",\n  \"name\" : \"김길동\",\n  \"department\" : \"개발 100팀\",\n  \"departmentCode\" : \"0001\",\n  \"jobPosition\" : \"책임연구원\",\n  \"jobTitle\" : \"파트장\",\n  \"phoneNumber\" : \"031-123-4567\",\n  \"mobilePhoneNumber\" : \"010-1234-5678\",\n  \"email\" : \"gdhong@pnpsecure.com\",\n  \"firstAuthType\" : \"NONE\",\n  \"secondAuthType\" : \"NONE\",\n  \"comment\" : \"Sample Account\",\n  \"startDate\" : \"2022-01-01T00:00:00\",\n  \"endDate\" : \"2025-12-31T23:59:59\"\n}\n\n\n// {\n//     \"password\": \"{{password}}\",\n//     \"name\": \"{{name}}\",\n//     \"department\": \"{{department}}\",\n//     \"departmentCode\": \"{{departmentCode}}\",\n//     \"jobPosition\": \"{{jobPosition}}\",\n//     \"jobTitle\": \"{{jobTitle}}\",\n//     \"phoneNumber\": \"{{phoneNumber}}\",\n//     \"mobilePhoneNumber\": \"{{mobilePhoneNumber}}\",\n//     \"email\": \"{{email}}\",\n//     \"firstAuthType\": \"{{firstAuthType}}\",\n//     \"secondAuthType\": \"{{secondAuthType}}\",\n//     \"comment\": \"{{name}}\",\n//     \"startDate\": \"{{startDate}}\",\n//     \"endDate\": \"{{endDate}}\"\n// }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/users/gdhong001",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"users",
+										"gdhong001"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "1.5 사용자 삭제",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check status\",function(){",
+											"    // // 204 response ; the server successfully processed the request, but there is no data to return. ",
+											"    // if (pm.response.code === 204) {",
+											"    //     console.error('Success: Post request was successful with status code 204');",
+											"    // } ",
+											"    ",
+											"    // // Check for \"Not Found\" error (HTTP status code 404)",
+											"    // else if (pm.response.code === 404) {",
+											"    //     console.error('Not Found: User ID not found with status code 404');",
+											"    // }",
+											"",
+											"    // // Handle other status codes as needed",
+											"    // else {",
+											"    //     console.error('Unhandled status code:', pm.response.code);",
+											"    // }",
+											"    var status = pm.response.status;",
+											"    console.log(status)",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"http://{{Host}}:{{Port}}/dbsafer/api/v1/users/user001"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/users/gdhong001",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"users",
+										"gdhong001"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "1.6 사용자 잠금",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check status\",function(){",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/users/lock",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"users",
+										"lock"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "1.7 사용자 잠금 해제",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check status\",function(){",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/users/gdhong8/unlock",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"users",
+										"gdhong8",
+										"unlock"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "1.8 사용자의 그룹 추가",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check status\",function(){",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/users/gdhong8/groups/1",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"users",
+										"gdhong8",
+										"groups",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "1.9 사용자의 그룹 제거",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check status\",function(){",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/users/gdhong5/groups/4",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"users",
+										"gdhong5",
+										"groups",
+										"4"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "사용자 그룹 관리",
+					"item": [
+						{
+							"name": "2.1사용자 그룹 목록 조회",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check status\",function(){\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.test(\"Response has result\", function(){\r",
+											"    let res = pm.response.json();\r",
+											"    let keys = ['index', 'name', 'comment']\r",
+											"    \r",
+											"    res.results.forEach(function(userGroups) {\r",
+											"        // console.log(userGroups)\r",
+											"        pm.expect(userGroups).to.have.keys(keys)\r",
+											"    });\r",
+											"\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/user/groups",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"user",
+										"groups"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "2.2사용자 그룹 조회",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check status\",function(){",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"pm.test(\"Response has result\", function(){",
+											"    let res = pm.response.json();",
+											"    let keys = ['index', 'name', 'comment']",
+											"    pm.expect(res).to.have.keys(keys)",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/user/groups/5",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"user",
+										"groups",
+										"5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "2.3사용자 그룹 추가",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n//   \"name\" : \"SampleUserGroup005!@#$$\",\n//   \"name\" : \"LIjX1dDhHSIDL5ooxqkeelvAaH1sKnOmcNuCzjj3Hp88TZXuKklcjjCbaPeDjcYr\",\n  \"name\" : \"parent_group\",\n  \"comment\" : \"comment\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/user/groups",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"user",
+										"groups"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "2.4사용자 그룹 수정",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check status\",function(){",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// // 초기 id 값 설정\r",
+											"// pm.variables.set(\"currentId\", 1235);\r",
+											"\r",
+											"// // 각 요청마다 id 값을 증가시키는 함수\r",
+											"// function increaseId() {\r",
+											"//     let currentId = pm.variables.get(\"currentId\");\r",
+											"//     currentId++;\r",
+											"//     pm.variables.set(\"currentId\", currentId);\r",
+											"// }"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\" : \"hN6BCMS1Vre1pYrwvf5bNkQU8Zq4TAeQW3jNMwFSfiJvW8GpQR1KCTje8rJ4443A\",\n  \"comment\" : \"sdfsdafsdf\"\n}\n\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/user/groups/5",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"user",
+										"groups",
+										"5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "2.5사용자 그룹 삭제",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check status\",function(){",
+											"    // // 204 response ; the server successfully processed the request, but there is no data to return. ",
+											"    // if (pm.response.code === 204) {",
+											"    //     console.error('Success: Post request was successful with status code 204');",
+											"    // } ",
+											"    ",
+											"    // // Check for \"Not Found\" error (HTTP status code 404)",
+											"    // else if (pm.response.code === 404) {",
+											"    //     console.error('Not Found: User ID not found with status code 404');",
+											"    // }",
+											"",
+											"    // // Handle other status codes as needed",
+											"    // else {",
+											"    //     console.error('Unhandled status code:', pm.response.code);",
+											"    // }",
+											"    var status = pm.response.status;",
+											"    console.log(status)",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"http://{{Host}}:{{Port}}/dbsafer/api/v1/users/user001"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/user/groups/{{index}}",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"user",
+										"groups",
+										"{{index}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "2.6사용자 그룹내 사용자 추가",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check status\",function(){",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/user/groups/1/users/gdhong",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"user",
+										"groups",
+										"1",
+										"users",
+										"gdhong"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "2.7사용자의 그룹 사용자 제거",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check status\",function(){",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/users/gdhong5/groups/4",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"users",
+										"gdhong5",
+										"groups",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "2.8사용자 그룹내 사용자 그룹 추가",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check status\",function(){",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/user/groups/7/subgroups/8",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"user",
+										"groups",
+										"7",
+										"subgroups",
+										"8"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "2.9사용자의 그룹 사용자 그룹 제거",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check status\",function(){",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/user/groups/7/subgroups/8",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"user",
+										"groups",
+										"7",
+										"subgroups",
+										"8"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "사용자  IP/MAC 관리",
+					"item": [
+						{
+							"name": "3.1. 사용자 IP/MAC 조회",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// pm.test(\"Response has Response fields\", function(){\r",
+											"//     let responseData = pm.response.json();\r",
+											"//     let keys = ['index', 'sno', 'ipAddr', 'ipAddrEnd', 'macAddr']\r",
+											"    \r",
+											"//     responseData.results.forEach(function(element) {\r",
+											"//         console.log(element);\r",
+											"//         pm.expect(element).to.have.keys(keys)\r",
+											"//     });\r",
+											"\r",
+											"// });"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/users/test1/ipmac",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"users",
+										"test1",
+										"ipmac"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.2. 사용자 IP/MAC 추가",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"ipAddr\" : \"2.2.2.2\",\r\n  \"ipAddrEnd\" : \"2.2.2.255\",\r\n  \"macAddr\" : \"00:00:00:00:00:00\"\r\n}\r\n\r\n\r\n// ipAddr \r\n// {\r\n//     \"index\": 0,\r\n//     \"sno\": \"gdhong8\",\r\n//     \"ipAddr\": \"2.2.2.256\",\r\n//     \"ipAddrEnd\": \"2.2.2.255\",\r\n//     \"macAddr\": \"00:00:00:00:00:00\"\r\n// }\r\n\r\n\r\n// ipAddrEnd \r\n// {\r\n//     \"index\": 0,\r\n//     \"sno\": \"gdhong8\",\r\n//     \"ipAddr\": \"2.2.2.2\",\r\n//     \"ipAddrEnd\": \"2.2.2.256\",\r\n//     \"macAddr\": \"00:00:00:00:00:00\"\r\n// }\r\n\r\n\r\n{\r\n    \"index\": 0,\r\n    \"sno\": \"gdhong8\",\r\n    \"ipAddr\": \"2.2.2.2\",\r\n    \"ipAddrEnd\": \"2.2.2.255\",\r\n    \"macAddr\": \"00:00:00:00:00:GG\"\r\n}\r\n    ",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/users/test10/ipmac",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"users",
+										"test10",
+										"ipmac"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.3. 사용자 IP/MAC 수정",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// {\r\n//   \"index\" : 21, // 이놈이 중요 ! \r\n//   \"sno\" : \"gdhong8!@#$\",\r\n//   \"ipAddr\" : \"3.3.3.1\",\r\n//   \"ipAddrEnd\" : \"3.3.3.2\",\r\n//   \"macAddr\" : \"00:00:00:00:00:00\"\r\n// }\r\n\r\n// {\r\n//     \"index\": 24,\r\n//     \"sno\": null,\r\n//     \"ipAddr\": \"2.2.2.255\",\r\n//     \"ipAddrEnd\": \"2.2.2.255\",\r\n//     \"macAddr\": \"00:00:00:00:00:00\"\r\n// }\r\n\r\n{\r\n    \"index\": \"{{index}}\",\r\n    \"sno\": \"{{sno}}\",\r\n    \"ipAddr\": \"{{ipAddr}}\",\r\n    \"ipAddrEnd\": \"{{ipAddrEnd}}\",\r\n    \"macAddr\": \"{{macAddr}}\"\r\n}\r\n\r\n// {\r\n//     \"index\": 26,\r\n//     \"sno\": null,\r\n//     \"ipAddr\": \"2.2.2.1\",\r\n//     \"ipAddrEnd\": \"2.2.2.255\",\r\n//     \"macAddr\": \"00:00:00:00:00:00\"\r\n// }\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/users/{{sno}}/ipmac",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"users",
+										"{{sno}}",
+										"ipmac"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.4. 사용자 IP/MAC 삭제",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/users/gdhong8/ipmac/28",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"users",
+										"gdhong8",
+										"ipmac",
+										"28"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{AccessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "객체관리 API",
+			"item": [
+				{
+					"name": "1. 접속계정 관리",
+					"item": [
+						{
+							"name": "1.1 접속계정 목록 조회",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// 응답 Fields 중 Required 항목들 존재하는지 확인 ",
+											"pm.test(\"응답 필드 확인\", function(){",
+											"    let res = pm.response.json();",
+											"    let keys = ['id', 'name', \"department\", \"departmentCode\", ",
+											"                \"jobPosition\", \"jobTitle\", \"phoneNumber\",",
+											"                \"mobilePhoneNumber\", \"email\", \"firstAuthType\", ",
+											"                \"secondAuthType\", \"comment\", \"startDate\", \"endDate\",",
+											"                \"createDate\", \"passwordChangeDate\", \"lock\", \"lockReason\"]",
+											"    ",
+											"    res.results.forEach(function(user) {",
+											"        pm.expect(user).to.have.keys(keys)",
+											"    });",
+											"});",
+											"",
+											"",
+											"pm.test(\"상태코드 200 체크\",function(){",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// pm.test(\"Response has results\", function(){",
+											"//     let res = pm.response.json();",
+											"//     pm.expect(res).to.have.keys('results')",
+											"// });",
+											"",
+											"// pm.test(\"Get length of results\", function(){",
+											"//     // let res = pm.response.json().results;",
+											"//     // res.forEach((num) => {console.log(num)}); // iteration by forEach",
+											"//     // for (let r of res) console.log(r); // iteration by for of",
+											"",
+											"//     let res = pm.response.json().results;",
+											"//     const res_length = Object.entries(res).length;",
+											"",
+											"//     // const pre_text = \"결과값의 길이는 : \";",
+											"//     // const result = pre_text + res_length;",
+											"//     console.log(\"결과값의 길이는 :\", res_length);",
+											"// })",
+											"",
+											"// pm.test(\"Response Content-Type is application/json\", function () {",
+											"//     pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"Lock field is a boolean value\", function () {",
+											"//     const responseData = pm.response.json();",
+											"    ",
+											"//     pm.expect(responseData).to.be.an('object');",
+											"//     pm.expect(responseData.lock).to.be.a('boolean');",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"Each 'id' in the 'results' array is a non-empty string\", function () {",
+											"//     const responseData = pm.response.json();",
+											"    ",
+											"//     pm.expect(responseData.results).to.be.an('array');",
+											"//     responseData.results.forEach(function(user) {",
+											"//         pm.expect(user.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"ID should be a non-empty string\");",
+											"//     });",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"Check if 'endDate' is either null or in a valid date format\", function () {",
+											"//     const responseData = pm.response.json();",
+											"    ",
+											"//     pm.expect(responseData.results).to.be.an('array');",
+											"//     responseData.results.forEach(function(user) {",
+											"//         pm.expect(user.endDate).to.satisfy(function (endDate) {",
+											"//             return endDate === null || Date.parse(endDate);",
+											"//         }, \"endDate should be null or in a valid date format\");",
+											"//     });",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"Ensure that lockReason is a non-empty string if lock is true\", function () {",
+											"//     const responseData = pm.response.json();",
+											"    ",
+											"//     pm.expect(responseData).to.be.an('object');",
+											"//     pm.expect(responseData.lock).to.equal(true);",
+											"//     if (responseData.lock) {",
+											"//         pm.expect(responseData.lockReason).to.be.a('string').and.to.have.lengthOf.at.least(1, \"lockReason should be a non-empty string\");",
+											"//     }",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"PhoneNumber and mobilePhoneNumber are in valid format\", function () {",
+											"//     const responseData = pm.response.json().results;",
+											"    ",
+											"//     pm.expect(responseData).to.be.an('array');",
+											"//     responseData.forEach(function(user) {",
+											"//         pm.expect(user.phoneNumber).to.match(/^\\d{10}$/);",
+											"//         pm.expect(user.mobilePhoneNumber).to.match(/^\\d{10}$/);",
+											"//     });",
+											"// });",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/object/access-accounts",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"object",
+										"access-accounts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "1.2 접속계정 조회",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// 응답코드 ",
+											"pm.test(\"응답코드 확인: \",function(){",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// 응답 Fields 중 Required 항목들 존재하는지 확인 ",
+											"pm.test(\"응답 필드 확인: \", function(){",
+											"    let res = pm.response.json();",
+											"    console.log(res);",
+											"    let keys = ['id', 'name', \"department\", \"departmentCode\", ",
+											"                \"jobPosition\", \"jobTitle\", \"phoneNumber\",",
+											"                \"mobilePhoneNumber\", \"email\", \"firstAuthType\", ",
+											"                \"secondAuthType\", \"comment\", \"startDate\", \"endDate\",",
+											"                \"createDate\", \"passwordChangeDate\", \"lock\", \"lockReason\"]",
+											"    pm.expect(res).to.have.keys(keys)",
+											"});",
+											"",
+											"",
+											"// 응답 콘텐츠 타입 ",
+											"pm.test(\"Response Content-Type is application/json\", function () {",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+											"});",
+											"",
+											"// 이메일 형식 확인 ",
+											"pm.test(\"Email is in a valid format\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData.email).to.be.a('string');",
+											"    pm.expect(responseData.email).to.match(/^.+@.+\\..+$/);",
+											"});",
+											"",
+											"",
+											"pm.test(\"StartDate and EndDate are in valid date format\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    // pm.expect(responseData.startDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"    pm.expect(responseData.startDate).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$/);",
+											"    // pm.expect(responseData.endDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"    pm.expect(responseData.endDate).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$/);",
+											"});",
+											"",
+											"// pm.test(\"Lock is a boolean value\", function () {",
+											"//     const responseData = pm.response.json();",
+											"    ",
+											"//     pm.expect(responseData).to.be.an('object');",
+											"//     pm.expect(responseData.lock).to.be.a('boolean');",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"LockReason is a non-empty string\", function () {",
+											"//   const responseData = pm.response.json();",
+											"  ",
+											"//   pm.expect(responseData).to.be.an('object');",
+											"//   pm.expect(responseData.lockReason).to.be.a('string').and.to.have.lengthOf.at.least(1, \"LockReason should be a non-empty string\");",
+											"// });",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/object/access-accounts/5",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"object",
+										"access-accounts",
+										"5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "1.3 접속계정 추가",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('상태코드 확인:', function () {",
+											"    pm.response.to.have.status(201);",
+											"})",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"followOriginalHttpMethod": false
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\" : \"{{id}}\",\n  \"startDate\" : \"{{startDate}}\",\n  \"endDate\" : \"{{endDate}}\",\n  \"comment\" : \"{{comment}}\"\n}\n\n// {\n//   \"id\" : \"account001\",\n//   \"startDate\" : \"2022-01-01T00:00:00\",\n//   \"endDate\" : \"2022-12-31T23:59:59\",\n//   \"comment\" : \"comment for account001\"\n// }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/object/access-accounts/",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"object",
+										"access-accounts",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "1.4 접속계정 수정",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check status\",function(){",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// // 초기 id 값 설정\r",
+											"// pm.variables.set(\"currentId\", 1235);\r",
+											"\r",
+											"// // 각 요청마다 id 값을 증가시키는 함수\r",
+											"// function increaseId() {\r",
+											"//     let currentId = pm.variables.get(\"currentId\");\r",
+											"//     currentId++;\r",
+											"//     pm.variables.set(\"currentId\", currentId);\r",
+											"// }"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"{{id}}\",\n    \"startDate\": \"{{startDate}}\",\n    \"endDate\": \"{{endDate}}\",\n    \"comment\": \"{{comment}}\"\n}\n\n// {\n//     \"id\": \"\",\n//     \"startDate\": \"2022-01-01T00:00:00\",\n//     \"endDate\": \"2022-12-31T23:59:59\",\n//     \"comment\": \"comment for account001\"\n// }\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/object/access-accounts/{{index}}",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"object",
+										"access-accounts",
+										"{{index}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "1.5 접속계정 삭제",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check status\",function(){",
+											"    // // 204 response ; the server successfully processed the request, but there is no data to return. ",
+											"    // if (pm.response.code === 204) {",
+											"    //     console.error('Success: Post request was successful with status code 204');",
+											"    // } ",
+											"    ",
+											"    // // Check for \"Not Found\" error (HTTP status code 404)",
+											"    // else if (pm.response.code === 404) {",
+											"    //     console.error('Not Found: User ID not found with status code 404');",
+											"    // }",
+											"",
+											"    // // Handle other status codes as needed",
+											"    // else {",
+											"    //     console.error('Unhandled status code:', pm.response.code);",
+											"    // }",
+											"    var status = pm.response.status;",
+											"    console.log(status)",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"http://{{Host}}:{{Port}}/dbsafer/api/v1/users/user001"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/object/access-accounts/24",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"object",
+										"access-accounts",
+										"24"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "2. 어플리케이션 관리",
+					"item": [
+						{
+							"name": "2.1 어플리케이션 목록 조회",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// 응답 Fields 중 Required 항목들 존재하는지 확인 ",
+											"pm.test(\"응답 필드 확인\", function(){",
+											"    let res = pm.response.json();",
+											"    let keys = ['id', 'name', \"department\", \"departmentCode\", ",
+											"                \"jobPosition\", \"jobTitle\", \"phoneNumber\",",
+											"                \"mobilePhoneNumber\", \"email\", \"firstAuthType\", ",
+											"                \"secondAuthType\", \"comment\", \"startDate\", \"endDate\",",
+											"                \"createDate\", \"passwordChangeDate\", \"lock\", \"lockReason\"]",
+											"    ",
+											"    res.results.forEach(function(user) {",
+											"        pm.expect(user).to.have.keys(keys)",
+											"    });",
+											"});",
+											"",
+											"",
+											"pm.test(\"상태코드 200 체크\",function(){",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// pm.test(\"Response has results\", function(){",
+											"//     let res = pm.response.json();",
+											"//     pm.expect(res).to.have.keys('results')",
+											"// });",
+											"",
+											"// pm.test(\"Get length of results\", function(){",
+											"//     // let res = pm.response.json().results;",
+											"//     // res.forEach((num) => {console.log(num)}); // iteration by forEach",
+											"//     // for (let r of res) console.log(r); // iteration by for of",
+											"",
+											"//     let res = pm.response.json().results;",
+											"//     const res_length = Object.entries(res).length;",
+											"",
+											"//     // const pre_text = \"결과값의 길이는 : \";",
+											"//     // const result = pre_text + res_length;",
+											"//     console.log(\"결과값의 길이는 :\", res_length);",
+											"// })",
+											"",
+											"// pm.test(\"Response Content-Type is application/json\", function () {",
+											"//     pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"Lock field is a boolean value\", function () {",
+											"//     const responseData = pm.response.json();",
+											"    ",
+											"//     pm.expect(responseData).to.be.an('object');",
+											"//     pm.expect(responseData.lock).to.be.a('boolean');",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"Each 'id' in the 'results' array is a non-empty string\", function () {",
+											"//     const responseData = pm.response.json();",
+											"    ",
+											"//     pm.expect(responseData.results).to.be.an('array');",
+											"//     responseData.results.forEach(function(user) {",
+											"//         pm.expect(user.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"ID should be a non-empty string\");",
+											"//     });",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"Check if 'endDate' is either null or in a valid date format\", function () {",
+											"//     const responseData = pm.response.json();",
+											"    ",
+											"//     pm.expect(responseData.results).to.be.an('array');",
+											"//     responseData.results.forEach(function(user) {",
+											"//         pm.expect(user.endDate).to.satisfy(function (endDate) {",
+											"//             return endDate === null || Date.parse(endDate);",
+											"//         }, \"endDate should be null or in a valid date format\");",
+											"//     });",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"Ensure that lockReason is a non-empty string if lock is true\", function () {",
+											"//     const responseData = pm.response.json();",
+											"    ",
+											"//     pm.expect(responseData).to.be.an('object');",
+											"//     pm.expect(responseData.lock).to.equal(true);",
+											"//     if (responseData.lock) {",
+											"//         pm.expect(responseData.lockReason).to.be.a('string').and.to.have.lengthOf.at.least(1, \"lockReason should be a non-empty string\");",
+											"//     }",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"PhoneNumber and mobilePhoneNumber are in valid format\", function () {",
+											"//     const responseData = pm.response.json().results;",
+											"    ",
+											"//     pm.expect(responseData).to.be.an('array');",
+											"//     responseData.forEach(function(user) {",
+											"//         pm.expect(user.phoneNumber).to.match(/^\\d{10}$/);",
+											"//         pm.expect(user.mobilePhoneNumber).to.match(/^\\d{10}$/);",
+											"//     });",
+											"// });",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/object/applications",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"object",
+										"applications"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "2.2 어플리케이션 조회",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// 응답코드 ",
+											"pm.test(\"응답코드 확인: \",function(){",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// 응답 Fields 중 Required 항목들 존재하는지 확인 ",
+											"pm.test(\"응답 필드 확인: \", function(){",
+											"    let res = pm.response.json();",
+											"    console.log(res);",
+											"    let keys = ['id', 'name', \"department\", \"departmentCode\", ",
+											"                \"jobPosition\", \"jobTitle\", \"phoneNumber\",",
+											"                \"mobilePhoneNumber\", \"email\", \"firstAuthType\", ",
+											"                \"secondAuthType\", \"comment\", \"startDate\", \"endDate\",",
+											"                \"createDate\", \"passwordChangeDate\", \"lock\", \"lockReason\"]",
+											"    pm.expect(res).to.have.keys(keys)",
+											"});",
+											"",
+											"",
+											"// 응답 콘텐츠 타입 ",
+											"pm.test(\"Response Content-Type is application/json\", function () {",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+											"});",
+											"",
+											"// 이메일 형식 확인 ",
+											"pm.test(\"Email is in a valid format\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData.email).to.be.a('string');",
+											"    pm.expect(responseData.email).to.match(/^.+@.+\\..+$/);",
+											"});",
+											"",
+											"",
+											"pm.test(\"StartDate and EndDate are in valid date format\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    // pm.expect(responseData.startDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"    pm.expect(responseData.startDate).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$/);",
+											"    // pm.expect(responseData.endDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"    pm.expect(responseData.endDate).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$/);",
+											"});",
+											"",
+											"// pm.test(\"Lock is a boolean value\", function () {",
+											"//     const responseData = pm.response.json();",
+											"    ",
+											"//     pm.expect(responseData).to.be.an('object');",
+											"//     pm.expect(responseData.lock).to.be.a('boolean');",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"LockReason is a non-empty string\", function () {",
+											"//   const responseData = pm.response.json();",
+											"  ",
+											"//   pm.expect(responseData).to.be.an('object');",
+											"//   pm.expect(responseData.lockReason).to.be.a('string').and.to.have.lengthOf.at.least(1, \"LockReason should be a non-empty string\");",
+											"// });",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/object/access-accounts/5",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"object",
+										"access-accounts",
+										"5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "2.3 어플리케이션 추가",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('상태코드 확인:', function () {",
+											"    pm.response.to.have.status(201);",
+											"})",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"followOriginalHttpMethod": false
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\" : \"{{name}}\",\n  \"startDate\" : \"{{startDate}}\",\n  \"endDate\" : \"{{endDate}}\",\n  \"comment\" : \"{{comment}}\"\n}\n\n// {\n//   \"name\" : \"application005\",\n//   \"startDate\" : \"2022-01-01T00:00:00\",\n//   \"endDate\" : \"2022-12-31T23:59:59\",\n//   \"comment\" : \"comment for application001\"\n// }\n\n// {\n//   \"id\" : \"account001\",\n//   \"startDate\" : \"2022-01-01T00:00:00\",\n//   \"endDate\" : \"2022-12-31T23:59:59\",\n//   \"comment\" : \"comment for account001\"\n// }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/object/applications/",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"object",
+										"applications",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "2.4 어플리케이션 수정",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check status\",function(){",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// // 초기 id 값 설정\r",
+											"// pm.variables.set(\"currentId\", 1235);\r",
+											"\r",
+											"// // 각 요청마다 id 값을 증가시키는 함수\r",
+											"// function increaseId() {\r",
+											"//     let currentId = pm.variables.get(\"currentId\");\r",
+											"//     currentId++;\r",
+											"//     pm.variables.set(\"currentId\", currentId);\r",
+											"// }"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\" : \"{{name}}\",\n  \"startDate\" : \"{{startDate}}\",\n  \"endDate\" : \"{{endDate}}\",\n  \"comment\" : \"{{comment}}\"\n}\n\n// {\n//   \"name\" : \"application002\",\n//   \"startDate\" : \"2022-01-01T00:00:00\",\n//   \"endDate\" : \"2022-12-31T23:59:59\",\n//   \"comment\" : \"comment for application001\"\n// }\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/object/applications/{{object_index}}",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"object",
+										"applications",
+										"{{object_index}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "2.5 어플리케이션 삭제",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check status\",function(){",
+											"    // // 204 response ; the server successfully processed the request, but there is no data to return. ",
+											"    // if (pm.response.code === 204) {",
+											"    //     console.error('Success: Post request was successful with status code 204');",
+											"    // } ",
+											"    ",
+											"    // // Check for \"Not Found\" error (HTTP status code 404)",
+											"    // else if (pm.response.code === 404) {",
+											"    //     console.error('Not Found: User ID not found with status code 404');",
+											"    // }",
+											"",
+											"    // // Handle other status codes as needed",
+											"    // else {",
+											"    //     console.error('Unhandled status code:', pm.response.code);",
+											"    // }",
+											"    var status = pm.response.status;",
+											"    console.log(status)",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"http://{{Host}}:{{Port}}/dbsafer/api/v1/users/user001"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/object/applications/22",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"object",
+										"applications",
+										"22"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "3. 데이터마스킹 관리",
+					"item": [
+						{
+							"name": "3.1 데이터마스킹 목록 조회",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// 응답 Fields 중 Required 항목들 존재하는지 확인 ",
+											"pm.test(\"응답 필드 확인\", function(){",
+											"    let res = pm.response.json();",
+											"    let keys = ['id', 'name', \"department\", \"departmentCode\", ",
+											"                \"jobPosition\", \"jobTitle\", \"phoneNumber\",",
+											"                \"mobilePhoneNumber\", \"email\", \"firstAuthType\", ",
+											"                \"secondAuthType\", \"comment\", \"startDate\", \"endDate\",",
+											"                \"createDate\", \"passwordChangeDate\", \"lock\", \"lockReason\"]",
+											"    ",
+											"    res.results.forEach(function(user) {",
+											"        pm.expect(user).to.have.keys(keys)",
+											"    });",
+											"});",
+											"",
+											"",
+											"pm.test(\"상태코드 200 체크\",function(){",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// pm.test(\"Response has results\", function(){",
+											"//     let res = pm.response.json();",
+											"//     pm.expect(res).to.have.keys('results')",
+											"// });",
+											"",
+											"// pm.test(\"Get length of results\", function(){",
+											"//     // let res = pm.response.json().results;",
+											"//     // res.forEach((num) => {console.log(num)}); // iteration by forEach",
+											"//     // for (let r of res) console.log(r); // iteration by for of",
+											"",
+											"//     let res = pm.response.json().results;",
+											"//     const res_length = Object.entries(res).length;",
+											"",
+											"//     // const pre_text = \"결과값의 길이는 : \";",
+											"//     // const result = pre_text + res_length;",
+											"//     console.log(\"결과값의 길이는 :\", res_length);",
+											"// })",
+											"",
+											"// pm.test(\"Response Content-Type is application/json\", function () {",
+											"//     pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"Lock field is a boolean value\", function () {",
+											"//     const responseData = pm.response.json();",
+											"    ",
+											"//     pm.expect(responseData).to.be.an('object');",
+											"//     pm.expect(responseData.lock).to.be.a('boolean');",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"Each 'id' in the 'results' array is a non-empty string\", function () {",
+											"//     const responseData = pm.response.json();",
+											"    ",
+											"//     pm.expect(responseData.results).to.be.an('array');",
+											"//     responseData.results.forEach(function(user) {",
+											"//         pm.expect(user.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"ID should be a non-empty string\");",
+											"//     });",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"Check if 'endDate' is either null or in a valid date format\", function () {",
+											"//     const responseData = pm.response.json();",
+											"    ",
+											"//     pm.expect(responseData.results).to.be.an('array');",
+											"//     responseData.results.forEach(function(user) {",
+											"//         pm.expect(user.endDate).to.satisfy(function (endDate) {",
+											"//             return endDate === null || Date.parse(endDate);",
+											"//         }, \"endDate should be null or in a valid date format\");",
+											"//     });",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"Ensure that lockReason is a non-empty string if lock is true\", function () {",
+											"//     const responseData = pm.response.json();",
+											"    ",
+											"//     pm.expect(responseData).to.be.an('object');",
+											"//     pm.expect(responseData.lock).to.equal(true);",
+											"//     if (responseData.lock) {",
+											"//         pm.expect(responseData.lockReason).to.be.a('string').and.to.have.lengthOf.at.least(1, \"lockReason should be a non-empty string\");",
+											"//     }",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"PhoneNumber and mobilePhoneNumber are in valid format\", function () {",
+											"//     const responseData = pm.response.json().results;",
+											"    ",
+											"//     pm.expect(responseData).to.be.an('array');",
+											"//     responseData.forEach(function(user) {",
+											"//         pm.expect(user.phoneNumber).to.match(/^\\d{10}$/);",
+											"//         pm.expect(user.mobilePhoneNumber).to.match(/^\\d{10}$/);",
+											"//     });",
+											"// });",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/object/datamasks",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"object",
+										"datamasks"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.2 데이터마스킹 조회",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// 응답코드 ",
+											"pm.test(\"응답코드 확인: \",function(){",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// 응답 Fields 중 Required 항목들 존재하는지 확인 ",
+											"pm.test(\"응답 필드 확인: \", function(){",
+											"    let res = pm.response.json();",
+											"    console.log(res);",
+											"    let keys = ['id', 'name', \"department\", \"departmentCode\", ",
+											"                \"jobPosition\", \"jobTitle\", \"phoneNumber\",",
+											"                \"mobilePhoneNumber\", \"email\", \"firstAuthType\", ",
+											"                \"secondAuthType\", \"comment\", \"startDate\", \"endDate\",",
+											"                \"createDate\", \"passwordChangeDate\", \"lock\", \"lockReason\"]",
+											"    pm.expect(res).to.have.keys(keys)",
+											"});",
+											"",
+											"",
+											"// 응답 콘텐츠 타입 ",
+											"pm.test(\"Response Content-Type is application/json\", function () {",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+											"});",
+											"",
+											"// 이메일 형식 확인 ",
+											"pm.test(\"Email is in a valid format\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData.email).to.be.a('string');",
+											"    pm.expect(responseData.email).to.match(/^.+@.+\\..+$/);",
+											"});",
+											"",
+											"",
+											"pm.test(\"StartDate and EndDate are in valid date format\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    // pm.expect(responseData.startDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"    pm.expect(responseData.startDate).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$/);",
+											"    // pm.expect(responseData.endDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"    pm.expect(responseData.endDate).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$/);",
+											"});",
+											"",
+											"// pm.test(\"Lock is a boolean value\", function () {",
+											"//     const responseData = pm.response.json();",
+											"    ",
+											"//     pm.expect(responseData).to.be.an('object');",
+											"//     pm.expect(responseData.lock).to.be.a('boolean');",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"LockReason is a non-empty string\", function () {",
+											"//   const responseData = pm.response.json();",
+											"  ",
+											"//   pm.expect(responseData).to.be.an('object');",
+											"//   pm.expect(responseData.lockReason).to.be.a('string').and.to.have.lengthOf.at.least(1, \"LockReason should be a non-empty string\");",
+											"// });",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/object/datamasks/5",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"object",
+										"datamasks",
+										"5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.3 데이터마스킹 추가",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('상태코드 확인:', function () {",
+											"    pm.response.to.have.status(201);",
+											"})",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"followOriginalHttpMethod": false
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// {\n//   \"name\" : \"{{name}}\",\n//   \"kind\" : \"{{kind}}\",\n//   \"value\" : \"{{value}}\",\n//   \"startDate\" : \"{{startDate}}\",\n//   \"endDate\" : \"{{endDate}}\",\n//   \"comment\" : \"{{comment}}\"\n// }\n\n// {\n//     \"name\": \"\",\n//     \"kind\": \"REGEX\",\n//     \"value\": \"/^[0-9]*$/\",\n//     \"startDate\": \"2022-01-01T00:00:00\",\n//     \"endDate\": \"2022-12-31T23:59:59\",\n//     \"comment\": \"comment for datamask001\"\n// }\n\n{\n  \"name\" : \"datamask004\",\n  \"kind\" : \"COLUMN\",\n  \"value\" : \"col_003\",\n  \"startDate\" : \"2022-01-01T00:00:00\",\n  \"endDate\" : \"2022-12-31T23:59:59\",\n  \"comment\" : \"comment for datamask001\"\n}\n\n// {\n//   \"id\" : \"account001\",\n//   \"startDate\" : \"2022-01-01T00:00:00\",\n//   \"endDate\" : \"2022-12-31T23:59:59\",\n//   \"comment\" : \"comment for account001\"\n// }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/object/datamasks/",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"object",
+										"datamasks",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.4 데이터마스킹 수정",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check status\",function(){",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// // 초기 id 값 설정\r",
+											"// pm.variables.set(\"currentId\", 1235);\r",
+											"\r",
+											"// // 각 요청마다 id 값을 증가시키는 함수\r",
+											"// function increaseId() {\r",
+											"//     let currentId = pm.variables.get(\"currentId\");\r",
+											"//     currentId++;\r",
+											"//     pm.variables.set(\"currentId\", currentId);\r",
+											"// }"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\" : \"{{name}}\",\n  \"kind\" : \"{{kind}}\",\n  \"value\" : \"{{value}}\",\n  \"startDate\" : \"{{startDate}}\",\n  \"endDate\" : \"{{endDate}}\",\n  \"comment\" : \"{{comment}}\"\n}\n\n// {\n//   \"name\" : \"datamask002\",\n//   \"kind\" : \"REGEX\",\n//   \"value\" : \"/^[0-9]*$/\",\n//   \"startDate\" : \"2022-01-01T00:00:00\",\n//   \"endDate\" : \"2022-12-31T23:59:59\",\n//   \"comment\" : \"comment for datamask001\"\n// }\n\n// {\n//   \"id\" : \"account001\",\n//   \"startDate\" : \"2022-01-01T00:00:00\",\n//   \"endDate\" : \"2022-12-31T23:59:59\",\n//   \"comment\" : \"comment for account001\"\n// }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/object/datamasks/{{object_index}}",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"object",
+										"datamasks",
+										"{{object_index}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.5 데이터마스킹 삭제",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check status\",function(){",
+											"    // // 204 response ; the server successfully processed the request, but there is no data to return. ",
+											"    // if (pm.response.code === 204) {",
+											"    //     console.error('Success: Post request was successful with status code 204');",
+											"    // } ",
+											"    ",
+											"    // // Check for \"Not Found\" error (HTTP status code 404)",
+											"    // else if (pm.response.code === 404) {",
+											"    //     console.error('Not Found: User ID not found with status code 404');",
+											"    // }",
+											"",
+											"    // // Handle other status codes as needed",
+											"    // else {",
+											"    //     console.error('Unhandled status code:', pm.response.code);",
+											"    // }",
+											"    var status = pm.response.status;",
+											"    console.log(status)",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"http://{{Host}}:{{Port}}/dbsafer/api/v1/users/user001"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/object/datamasks/7",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"object",
+										"datamasks",
+										"7"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "4. IP 주소 관리",
+					"item": [
+						{
+							"name": "4.1 IP주소 목록 조회",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// 응답 Fields 중 Required 항목들 존재하는지 확인 ",
+											"pm.test(\"응답 필드 확인\", function(){",
+											"    let res = pm.response.json();",
+											"    let keys = ['id', 'name', \"department\", \"departmentCode\", ",
+											"                \"jobPosition\", \"jobTitle\", \"phoneNumber\",",
+											"                \"mobilePhoneNumber\", \"email\", \"firstAuthType\", ",
+											"                \"secondAuthType\", \"comment\", \"startDate\", \"endDate\",",
+											"                \"createDate\", \"passwordChangeDate\", \"lock\", \"lockReason\"]",
+											"    ",
+											"    res.results.forEach(function(user) {",
+											"        pm.expect(user).to.have.keys(keys)",
+											"    });",
+											"});",
+											"",
+											"",
+											"pm.test(\"상태코드 200 체크\",function(){",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// pm.test(\"Response has results\", function(){",
+											"//     let res = pm.response.json();",
+											"//     pm.expect(res).to.have.keys('results')",
+											"// });",
+											"",
+											"// pm.test(\"Get length of results\", function(){",
+											"//     // let res = pm.response.json().results;",
+											"//     // res.forEach((num) => {console.log(num)}); // iteration by forEach",
+											"//     // for (let r of res) console.log(r); // iteration by for of",
+											"",
+											"//     let res = pm.response.json().results;",
+											"//     const res_length = Object.entries(res).length;",
+											"",
+											"//     // const pre_text = \"결과값의 길이는 : \";",
+											"//     // const result = pre_text + res_length;",
+											"//     console.log(\"결과값의 길이는 :\", res_length);",
+											"// })",
+											"",
+											"// pm.test(\"Response Content-Type is application/json\", function () {",
+											"//     pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"Lock field is a boolean value\", function () {",
+											"//     const responseData = pm.response.json();",
+											"    ",
+											"//     pm.expect(responseData).to.be.an('object');",
+											"//     pm.expect(responseData.lock).to.be.a('boolean');",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"Each 'id' in the 'results' array is a non-empty string\", function () {",
+											"//     const responseData = pm.response.json();",
+											"    ",
+											"//     pm.expect(responseData.results).to.be.an('array');",
+											"//     responseData.results.forEach(function(user) {",
+											"//         pm.expect(user.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"ID should be a non-empty string\");",
+											"//     });",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"Check if 'endDate' is either null or in a valid date format\", function () {",
+											"//     const responseData = pm.response.json();",
+											"    ",
+											"//     pm.expect(responseData.results).to.be.an('array');",
+											"//     responseData.results.forEach(function(user) {",
+											"//         pm.expect(user.endDate).to.satisfy(function (endDate) {",
+											"//             return endDate === null || Date.parse(endDate);",
+											"//         }, \"endDate should be null or in a valid date format\");",
+											"//     });",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"Ensure that lockReason is a non-empty string if lock is true\", function () {",
+											"//     const responseData = pm.response.json();",
+											"    ",
+											"//     pm.expect(responseData).to.be.an('object');",
+											"//     pm.expect(responseData.lock).to.equal(true);",
+											"//     if (responseData.lock) {",
+											"//         pm.expect(responseData.lockReason).to.be.a('string').and.to.have.lengthOf.at.least(1, \"lockReason should be a non-empty string\");",
+											"//     }",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"PhoneNumber and mobilePhoneNumber are in valid format\", function () {",
+											"//     const responseData = pm.response.json().results;",
+											"    ",
+											"//     pm.expect(responseData).to.be.an('array');",
+											"//     responseData.forEach(function(user) {",
+											"//         pm.expect(user.phoneNumber).to.match(/^\\d{10}$/);",
+											"//         pm.expect(user.mobilePhoneNumber).to.match(/^\\d{10}$/);",
+											"//     });",
+											"// });",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/object/ip-addresses",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"object",
+										"ip-addresses"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "4.2 IP주소 조회",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// 응답코드 ",
+											"pm.test(\"응답코드 확인: \",function(){",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// 응답 Fields 중 Required 항목들 존재하는지 확인 ",
+											"pm.test(\"응답 필드 확인: \", function(){",
+											"    let res = pm.response.json();",
+											"    console.log(res);",
+											"    let keys = ['id', 'name', \"department\", \"departmentCode\", ",
+											"                \"jobPosition\", \"jobTitle\", \"phoneNumber\",",
+											"                \"mobilePhoneNumber\", \"email\", \"firstAuthType\", ",
+											"                \"secondAuthType\", \"comment\", \"startDate\", \"endDate\",",
+											"                \"createDate\", \"passwordChangeDate\", \"lock\", \"lockReason\"]",
+											"    pm.expect(res).to.have.keys(keys)",
+											"});",
+											"",
+											"",
+											"// 응답 콘텐츠 타입 ",
+											"pm.test(\"Response Content-Type is application/json\", function () {",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+											"});",
+											"",
+											"// 이메일 형식 확인 ",
+											"pm.test(\"Email is in a valid format\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData.email).to.be.a('string');",
+											"    pm.expect(responseData.email).to.match(/^.+@.+\\..+$/);",
+											"});",
+											"",
+											"",
+											"pm.test(\"StartDate and EndDate are in valid date format\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    // pm.expect(responseData.startDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"    pm.expect(responseData.startDate).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$/);",
+											"    // pm.expect(responseData.endDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+											"    pm.expect(responseData.endDate).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$/);",
+											"});",
+											"",
+											"// pm.test(\"Lock is a boolean value\", function () {",
+											"//     const responseData = pm.response.json();",
+											"    ",
+											"//     pm.expect(responseData).to.be.an('object');",
+											"//     pm.expect(responseData.lock).to.be.a('boolean');",
+											"// });",
+											"",
+											"",
+											"// pm.test(\"LockReason is a non-empty string\", function () {",
+											"//   const responseData = pm.response.json();",
+											"  ",
+											"//   pm.expect(responseData).to.be.an('object');",
+											"//   pm.expect(responseData.lockReason).to.be.a('string').and.to.have.lengthOf.at.least(1, \"LockReason should be a non-empty string\");",
+											"// });",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/object/datamasks/5",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"object",
+										"datamasks",
+										"5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "4.3 IP주소 추가",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('상태코드 확인:', function () {",
+											"    pm.response.to.have.status(201);",
+											"})",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"followOriginalHttpMethod": false
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"ipFrom\" : \"192.168.106.1\",\n  \"ipTo\" : \"192.168.106.255\",\n  \"mac\" : \"\",\n  \"startDate\" : \"2022-01-01T00:00:00\",\n  \"endDate\" : \"2022-12-31T23:59:59\",\n  \"comment\" : \"comment for ip-address\"\n}\n\n// {\n//   \"ipFrom\" : \"{{ipFrom}}\",\n//   \"ipTo\" : \"{{ipTo}}\",\n//   \"mac\" : \"{{mac}}\",\n//   \"startDate\" : \"{{startDate}}\",\n//   \"endDate\" : \"{{endDate}}\",\n//   \"comment\" : \"{{comment}}\"\n// }\n\n// {\n//   \"id\" : \"account001\",\n//   \"startDate\" : \"2022-01-01T00:00:00\",\n//   \"endDate\" : \"2022-12-31T23:59:59\",\n//   \"comment\" : \"comment for account001\"\n// }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/object/ip-addresses",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"object",
+										"ip-addresses"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "4.4 IP주소 수정",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check status\",function(){",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// // 초기 id 값 설정\r",
+											"// pm.variables.set(\"currentId\", 1235);\r",
+											"\r",
+											"// // 각 요청마다 id 값을 증가시키는 함수\r",
+											"// function increaseId() {\r",
+											"//     let currentId = pm.variables.get(\"currentId\");\r",
+											"//     currentId++;\r",
+											"//     pm.variables.set(\"currentId\", currentId);\r",
+											"// }"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// {\n//   \"ipFrom\" : \"{{ipFrom}}\",\n//   \"ipTo\" : \"{{ipTo}}\",\n//   \"mac\" : \"{{mac}}\",\n//   \"startDate\" : \"{{startDate}}\",\n//   \"endDate\" : \"{{endDate}}\",\n//   \"comment\" : \"{{comment}}\"\n// }\n\n{\n  \"ipFrom\" : \"2.2.2.2\",\n  \"ipTo\" : \"3.3.3.3\",\n  \"mac\" : \"\",\n  \"startDate\" : \"2022-01-01T00:00:00\",\n  \"endDate\" : \"2022-12-31T23:59:59\",\n  \"comment\" : \"comment for ip-address\"\n}\n\n// {\n//   \"id\" : \"account001\",\n//   \"startDate\" : \"2022-01-01T00:00:00\",\n//   \"endDate\" : \"2022-12-31T23:59:59\",\n//   \"comment\" : \"comment for account001\"\n// }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/object/ip-addresses/14",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"object",
+										"ip-addresses",
+										"14"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "4.5 IP주소 삭제",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check status\",function(){",
+											"    // // 204 response ; the server successfully processed the request, but there is no data to return. ",
+											"    // if (pm.response.code === 204) {",
+											"    //     console.error('Success: Post request was successful with status code 204');",
+											"    // } ",
+											"    ",
+											"    // // Check for \"Not Found\" error (HTTP status code 404)",
+											"    // else if (pm.response.code === 404) {",
+											"    //     console.error('Not Found: User ID not found with status code 404');",
+											"    // }",
+											"",
+											"    // // Handle other status codes as needed",
+											"    // else {",
+											"    //     console.error('Unhandled status code:', pm.response.code);",
+											"    // }",
+											"    var status = pm.response.status;",
+											"    console.log(status)",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"http://{{Host}}:{{Port}}/dbsafer/api/v1/users/user001"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/object/ip-addresses/11",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"object",
+										"ip-addresses",
+										"11"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "서비스 관리 API",
+			"item": [
+				{
+					"name": "서비스 관리",
+					"item": [
+						{
+							"name": "서비스 목록 조회",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// pm.test(\"Response has results\", function(){\r",
+											"//     let res = pm.response.json();\r",
+											"//     pm.expect(res).to.have.keys('results');\r",
+											"// });\r",
+											"\r",
+											"// pm.test(\"Get length of results\", function(){\r",
+											"//     let res = pm.response.json().results;\r",
+											"//     res.forEach((num) => {console.log(num)}); // iteration by forEach\r",
+											"//     for (let r of res) console.log(r); // iteration by for of\r",
+											"\r",
+											"//     let res = pm.response.json().results;\r",
+											"//     const res_length = Object.entries(res).length;\r",
+											"\r",
+											"//     console.log(\"결과값의 길이는 :\", res_length);\r",
+											"// })\r",
+											"\r",
+											"// console.log(`Number of items: ${_.size(pm.response.json())}`)"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/services",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"services"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "서비스 번호 조회",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// let host = pm.collectionVariables.get('Host');",
+											"// let urlConcatenation = `http://${host}:8000/query`;",
+											"",
+											"// pm.sendRequest({",
+											"//     url: urlConcatenation,",
+											"//     method: 'POST',",
+											"//     header: {",
+											"//         'Content-Type': 'application/json',",
+											"//         'Accept': '*/*'",
+											"//     },",
+											"//     body: {",
+											"//         mode: 'raw',",
+											"//         raw: 'select * from dbsafer3.services where no = 4'",
+											"//     }",
+											"// }, function(err, res) {",
+											"//     if (err) {",
+											"//         console.error(err);",
+											"//     } else {",
+											"//         try {",
+											"//             let res_data = res.json();",
+											"//             console.log(res_data)",
+											"//         } catch (error) {",
+											"//             console.error('Error parsing response JSON:', error);",
+											"//         }",
+											"//     }",
+											"// });"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// let host = pm.collectionVariables.get('Host');",
+											"// let urlConcatenation = `http://${host}:8000/query`;",
+											"",
+											"// pm.sendRequest({",
+											"//     url: urlConcatenation,",
+											"//     method: 'POST',",
+											"//     header: {",
+											"//         'Content-Type': 'application/json',",
+											"//         'Accept': '*/*'",
+											"//     },",
+											"//     body: {",
+											"//         mode: 'raw',",
+											"//         raw : '{\"query_text\": \"select * from dbsafer3.services where no = 4\"}'",
+											"//     }",
+											"// }, function(err, res) {",
+											"//     if (err) {",
+											"//         console.error(err);",
+											"//     } else {",
+											"//         try {",
+											"//             let res_data = res.json();",
+											"//             console.log(res_data)",
+											"//         } catch (error) {",
+											"//             console.error('Error parsing response JSON:', error);",
+											"//         }",
+											"//     }",
+											"// });",
+											"",
+											"",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// {\n//   \"query_text\" : \"select name from dbsafer3.services where no = 1\"\n// }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/services/143",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"services",
+										"143"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "서비스 추가",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// pm.test('상태코드 확인:', function () {\r",
+											"//     pm.response.to.have.status(201);\r",
+											"    \r",
+											"// })\r",
+											"\r",
+											"\r",
+											"// pm.test(\"Response status code is 500\", function () {\r",
+											"//     pm.response.to.have.status(500);\r",
+											"// });\r",
+											"\r",
+											"\r",
+											"// pm.test(\"Content-Type header is 'text/xml'\", function () {\r",
+											"//     pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"text/xml\");\r",
+											"// });\r",
+											"\r",
+											"\r",
+											"// pm.test(\"Response body is not empty\", function () {\r",
+											"//     const responseData = xml2Json(pm.response.text());\r",
+											"    \r",
+											"//     pm.expect(responseData).to.not.be.empty;\r",
+											"// });\r",
+											"\r",
+											"\r",
+											"// pm.test(\"Response body is in a valid XML format\", function () {\r",
+											"//     const responseData = xml2Json(pm.response.text());\r",
+											"//     pm.expect(responseData).to.not.be.null;\r",
+											"// });\r",
+											"\r",
+											"\r",
+											"// pm.test(\"Verify that the response does not contain any sensitive information\", function () {\r",
+											"//     const responseData = xml2Json(pm.response.text());\r",
+											"    \r",
+											"//     pm.expect(responseData).to.be.null;\r",
+											"// });\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"sample-service100\",\n    \"address\": \"255.255.255.221\",\n    \"port\": 65535,\n    \"core\": 4,\n    \"type\": \"MYSQL\",\n    \"processCount\": 0.5,\n    \"sessionIdleTime\": \"604860\",\n    \"useNatIdentity\": true,\n    \"sslSupportType\": \"NOT_USE\",\n    \"secureConnectType\": \"NOT_USE\",\n    \"startDate\": \"2022-01-01T00:00:00\",\n    \"endDate\": \"2022-12-31T23:59:59\",\n    \"comment\": \"sample comment\"\n}\n\n\n\n// {\n//   \"name\" : \"{{name}}\",\n//   \"address\" : \"{{address}}\",\n//   \"port\" : \"{{port}}\",\n//   \"core\" : \"{{core}}\",\n//   \"type\" : \"{{type}}\",\n//   \"processCount\" : \"{{processCount}}\",\n//   \"sessionIdleTime\" : \"{{sessionIdleTime}}\",\n//   \"useNatIdentity\" : \"{{useNatIdentity}}\",\n//   \"sslSupportType\" : \"{{sslSupportType}}\",\n//   \"secureConnectType\" : \"{{secureConnectType}}\",\n//   \"startDate\" : \"{{startDate}}\",\n//   \"endDate\" : \"{{endDate}}\",\n//   \"comment\" : \"{{comment}}\"\n// }\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/services",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"services"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "서비스 수정",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{    \n    \"name\": \"sample\",\n    \"address\": \"1.2.3.\",\n    \"port\": 65535, // 65536 \n    \"core\": \"\", // 257\n    \"type\": \"\",\n    \"processCount\": 0.5, //31,\n    \"sessionIdleTime\": 604801 ,// 604801,\n    \"useNatIdentity\": true,\n    \"sslSupportType\": \"NOT_USE\",\n    \"secureConnectType\": \"NOT_USE\",\n    \"startDate\": \"2022-01-01T00:00:00\",\n    \"endDate\": \"2022-12-31T23:59:59\",\n    \"comment\": \"sample comment\"\n}\n\n// {    \n//     \"name\": \"sample-service18\",\n//     \"address\": \"1.2.3.4\",//\"64mM2EcUcWfaWj19UQFw0xhiA4B8aMSjYQqLTKJfcWq1z4pFGBvJBh9pAH4FMX3uQCDb91J31ChfRSpgV1n62ZHWenVL0Svmi3TWvCbGagQ4RK0uJU5ZfX1xA55D3QLANrQ4DmPC7PS38h3DhrUSwLqUcxmPFxPYwYj5aARQaULS0LqKQj1fYra5Qmzevb2vZitMe5aEJXHrf3qZ75SaEaX0ZLgNMz4aCf2Z4pUXzkLWLqe49gzZKBjtGLQKGP6\",\n//     \"port\": 65535, // 65536 \n//     \"core\": \"\", // 257\n//     \"type\": 4,\n//     \"processCount\": 0.5, //31,\n//     \"sessionIdleTime\": 604801 ,// 604801,\n//     \"useNatIdentity\": true,\n//     \"sslSupportType\": \"NOT_USE\",\n//     \"secureConnectType\": \"NOT_USE\",\n//     \"startDate\": \"2022-01-01T00:00:00\",\n//     \"endDate\": \"2022-12-31T23:59:59\",\n//     \"comment\": \"sample comment\"\n// }\n\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/services/143",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"services",
+										"143"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "서비스 시작",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/services/1/start",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"services",
+										"1",
+										"start"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "서비스 정지",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/services/1/stop",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"services",
+										"1",
+										"stop"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "서비스 삭제",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/services/145",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"services",
+										"145"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "서비스의 그룹 추가",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/services/1/groups/14",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"services",
+										"1",
+										"groups",
+										"14"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "서비스의 그룹 제거",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/services/1/groups/14",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"services",
+										"1",
+										"groups",
+										"14"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "테스트용 DB query",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let host = pm.collectionVariables.get('Host');",
+											"let urlConcatenation = `http://${host}:8000/query`;",
+											"",
+											"pm.sendRequest({",
+											"    url: urlConcatenation,",
+											"    method: 'POST',",
+											"    header: {",
+											"        'Content-Type': 'application/json',",
+											"        'Accept': '*/*'",
+											"    },",
+											"    body: {",
+											"        mode: 'raw',",
+											"        raw: 'select * from dbsafer3.services where no = 4'",
+											"    }",
+											"}, function(err, res) {",
+											"    if (err) {",
+											"        console.error(err);",
+											"    } else {",
+											"        try {",
+											"            let res_data = res.json();",
+											"            console.log(res_data)",
+											"        } catch (error) {",
+											"            console.error('Error parsing response JSON:', error);",
+											"        }",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let host = pm.collectionVariables.get('Host');",
+											"let urlConcatenation = `http://${host}:8000/query`;",
+											"",
+											"pm.sendRequest({",
+											"    url: urlConcatenation,",
+											"    method: 'POST',",
+											"    header: {",
+											"        'Content-Type': 'application/json',",
+											"        'Accept': '*/*'",
+											"    },",
+											"    body: {",
+											"        mode: 'raw',",
+											"        raw : '{\"query_text\": \"select * from dbsafer3.services where no = 4\"}'",
+											"    }",
+											"}, function(err, res) {",
+											"    if (err) {",
+											"        console.error(err);",
+											"    } else {",
+											"        try {",
+											"            let res_data = res.json();",
+											"            console.log(res_data)",
+											"        } catch (error) {",
+											"            console.error('Error parsing response JSON:', error);",
+											"        }",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"query_text\" : \"select name from dbsafer3.services where no = 1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://10.77.162.100:8000/query",
+									"protocol": "http",
+									"host": [
+										"10",
+										"77",
+										"162",
+										"100"
+									],
+									"port": "8000",
+									"path": [
+										"query"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "서비스 그룹관리",
+					"item": [
+						{
+							"name": "서비스 그룹 목록 조회",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// 응답 코드 확인 \r",
+											"pm.test(\"상태코드 200 체크\",function(){\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"// 응답 Fields 중 Required 항목들 존재하는지 확인 \r",
+											"pm.test(\"응답 필드 확인\", function(){\r",
+											"    let res = pm.response.json();\r",
+											"    let keys = ['index', 'name', 'kind', 'comment'];\r",
+											"    \r",
+											"    res.results.forEach(function(service) {\r",
+											"        pm.expect(service).to.have.keys(keys)\r",
+											"    });\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/service/groups",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"service",
+										"groups"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "서비스 그룹 조회",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// 응답 코드 확인 \r",
+											"pm.test(\"상태코드 200 체크\",function(){\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"// 응답 Fields 중 Required 항목들 존재하는지 확인 \r",
+											"pm.test(\"응답 필드 확인\", function(){\r",
+											"    let res = pm.response.json();\r",
+											"    let keys = ['index', 'name', 'kind', 'comment'];\r",
+											"    \r",
+											"    res.results.forEach(function(service) {\r",
+											"        pm.expect(service).to.have.keys(keys)\r",
+											"    });\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/service/groups/",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"service",
+										"groups",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "서비스 그룹 추가",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// // 성공케이스\n// { \n//   \"name\" : \"SampleServiceGroup004\",\n//   \"kind\" : \"DBMS\",\n//   \"comment\" : \"comment\"\n// },\n\n\n// // name 누락\n// {\n//   \"name\" : \"\",\n//   \"kind\" : \"DBMS\",\n//   \"comment\" : \"comment\"\n// },\n\n\n\n// // kind 누락\n// {\n//   \"name\" : \"SampleServiceGroup005\",\n//   \"kind\" : \"\",\n//   \"comment\" : \"comment\"\n// }\n\n\n// // 자리수 초과 \n// {\n//   \"name\" : \"hN6BCMS1Vre1pYrwvf5bNkQU8Zq4TAeQW3jNMwFSfiJvW8GpQR1KCTje8rJ7553A123456789123456789123456789123456789123456789123456789123456789\",\n//   \"kind\" : \"DBMS\",\n//   \"comment\" : \"comment\"\n// }\n\n// 특수문자 입력 \n{\n  \"name\" : \"test@@#!@#\",\n  \"kind\" : \"DBMS\",\n  \"comment\" : \"comment\"\n}\n\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/service/groups",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"service",
+										"groups"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "서비스 그룹 수정",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// 정상 케이스 \n// {\n//   \"name\" : \"test123\",\n//   \"comment\" : \"sample_comment\"\n// }\n\n\n{\n  \"name\" : \"testtt!@#@\",\n  \"comment\" : \"sample_comment\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/service/groups/14",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"service",
+										"groups",
+										"14"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "서비스 그룹 삭제",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/service/groups/",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"service",
+										"groups",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "서비스 그룹 내 서비스 추가",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/service/groups/20/services/111/",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"service",
+										"groups",
+										"20",
+										"services",
+										"111",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "서비스 그룹 내 서비스 제거",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/service/groups/20/services/111",
+									"protocol": "https",
+									"host": [
+										"{{Host}}"
+									],
+									"port": "{{Port}}",
+									"path": [
+										"dbsafer",
+										"api",
+										"v1",
+										"service",
+										"groups",
+										"20",
+										"services",
+										"111"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{AccessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "연동정책(접근) 관리",
+			"item": [
+				{
+					"name": "연동정책(접근) 목록 조회",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/policy/custom/access-policies/",
+							"protocol": "https",
+							"host": [
+								"{{Host}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"dbsafer",
+								"api",
+								"v1",
+								"policy",
+								"custom",
+								"access-policies",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "연동정책(접근) 조회",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/policy/custom/access-policies/1/",
+							"protocol": "https",
+							"host": [
+								"{{Host}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"dbsafer",
+								"api",
+								"v1",
+								"policy",
+								"custom",
+								"access-policies",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "연동정책(접근) 추가",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Read the JSON file content\r",
+									"var jsonData = pm.iterationData.toObject();\r",
+									"console.log(jsonData);\r",
+									"\r",
+									"// Convert the sqlPrivileges string to an array\r",
+									"// var sqlPrivilegesArray = jsonData.sqlPrivileges.split(\", \");\r",
+									"// console.log(sqlPrivilegesArray);\r",
+									"\r",
+									"// Set the request body using the JSON data\r",
+									"pm.request.body.raw = JSON.stringify({\r",
+									"    policyId: jsonData.policyId,\r",
+									"    userId: jsonData.userId,\r",
+									"    account: jsonData.account,\r",
+									"    clientIpBegin: jsonData.clientIpBegin,\r",
+									"    clientIpEnd: jsonData.clientIpEnd,\r",
+									"    serverAddress: jsonData.serverAddress,\r",
+									"    serverPort: jsonData.serverPort,\r",
+									"    sid: jsonData.sid,\r",
+									"    // sqlPrivileges: sqlPrivilegesArray,\r",
+									"    sqlPrivileges: jsonData.sqlPrivileges,\r",
+									"    policyType: jsonData.policyType,\r",
+									"    startDate: jsonData.startDate,\r",
+									"    endDate: jsonData.endDate\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\n//   \"policyId\" : \"POLICY_20230101001\",\n//   \"userId\" : \"\",\n//   \"account\" : \"account001\",\n//   \"clientIpBegin\" : \"1.1.1.1\",\n//   \"clientIpEnd\" : \"2.2.2.2\",\n//   \"serverAddress\" : \"1.1.1.1\",\n//   \"serverPort\" : 3306,\n//   \"sid\" : \"instance001\",\n//   \"sqlPrivileges\" : [ \"SELECT\", \"INSERT\" ],\n//   \"startDate\" : \"2022-01-01T00:00:00\",\n//   \"endDate\" : \"2022-12-31T23:59:59\"\n// }\n\n\n{\n    \"policyId\": \"{{policyId}}\",\n    \"userId\": \"{{userId}}\",\n    \"account\": \"{{account}}\",\n    \"clientIpBegin\": \"{{clientIpBegin}}\",\n    \"clientIpEnd\": \"{{clientIpEnd}}\",\n    \"serverAddress\": \"{{serverAddress}}\",\n    \"serverPort\": {{serverPort}},\n    \"sid\": \"{{sid}}\",\n    \"sqlPrivileges\": \"{{sqlPrivileges}}\",\n    \"policyType\": \"{{policyType}}\",\n    \"startDate\": \"{{startDate}}\",\n    \"endDate\": \"{{endDate}}\"\n}\n\n// {\n//     \"policyId\": \"POLICY_4\",\n//     \"userId\": \"user004\",\n//     \"account\": \"account001\",\n//     \"clientIpBegin\": \"1.1.1.256\",\n//     \"clientIpEnd\": \"2.2.2.2\",\n//     \"serverAddress\": \"1.1.1.1\",\n//     \"serverPort\": 3306,\n//     \"sid\": \"instance001\",\n//     \"sqlPrivileges\": [\n//         \"INSERT\",\n//         \"SELECT\"\n//     ],\n//     \"policyType\": \"SAC\",\n//     \"startDate\": \"2022-01-01T00:00:00\",\n//     \"endDate\": \"2022-12-31T23:59:59\"\n// }\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/policy/custom/access-policies",
+							"protocol": "https",
+							"host": [
+								"{{Host}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"dbsafer",
+								"api",
+								"v1",
+								"policy",
+								"custom",
+								"access-policies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "연동정책(접근) 수정",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\n//   \"policyId\" : \"POLICY_20230101001\",\n//   \"userId\" : \"\",\n//   \"account\" : \"account002\",\n//   \"clientIpBegin\" : \"4.4.4.4\",\n//   \"clientIpEnd\" : \"5.5.5.5\",\n//   \"serverAddress\" : \"2.2.2.2\",\n//   \"serverPort\" : 3306,\n//   \"sid\" : \"instance001\",\n//   \"sqlPrivileges\" : [ \"SELECT\", \"INSERT\", \"DELETE\" ],\n//   \"startDate\" : \"2022-01-01T00:00:00\",\n//   \"endDate\" : \"2022-12-31T23:59:59\"\n// }\n\n{\n  \"policyId\" : \"POLICY_20230101001\",\n  \"userId\" : \"user001!@#$\",\n  \"account\" : \"account001\",\n  \"clientIpBegin\" : \"1.1.1.256\",\n  \"clientIpEnd\" : \"2.2.2.256\",\n  \"serverAddress\" : \"1.1.1.256\",\n  \"serverPort\" : 65536,\n  \"sid\" : \"instance001\",\n  \"sqlPrivileges\" : [ \"INSERT\", \"SELECT\" ],\n  \"policyType\" : \"SAC\",\n  \"startDate\" : \"2022-01-01T00:00:00\",\n  \"endDate\" : \"2022-12-31T23:59:59\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/policy/custom/access-policies/1",
+							"protocol": "https",
+							"host": [
+								"{{Host}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"dbsafer",
+								"api",
+								"v1",
+								"policy",
+								"custom",
+								"access-policies",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "연동정책(접근) 잠금",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"policyId\" : \"POLICY_20230101001\",\n  \"userId\" : \"user001\",\n  \"account\" : \"account002\",\n  \"clientIpBegin\" : \"4.4.4.4\",\n  \"clientIpEnd\" : \"5.5.5.5\",\n  \"serverAddress\" : \"2.2.2.2\",\n  \"serverPort\" : 3306,\n  \"sid\" : \"instance001\",\n  \"sqlPrivileges\" : [ \"SELECT\", \"INSERT\", \"DELETE\" ],\n  \"startDate\" : \"2022-01-01T00:00:00\",\n  \"endDate\" : \"2022-12-31T23:59:59\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/policy/custom/access-policies/lock?policyId=POLICY_20230101001",
+							"protocol": "https",
+							"host": [
+								"{{Host}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"dbsafer",
+								"api",
+								"v1",
+								"policy",
+								"custom",
+								"access-policies",
+								"lock"
+							],
+							"query": [
+								{
+									"key": "policyId",
+									"value": "POLICY_20230101001"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "연동정책(접근) 잠금해제",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"policyId\" : \"POLICY_20230101001\",\n  \"userId\" : \"user001\",\n  \"account\" : \"account002\",\n  \"clientIpBegin\" : \"4.4.4.4\",\n  \"clientIpEnd\" : \"5.5.5.5\",\n  \"serverAddress\" : \"2.2.2.2\",\n  \"serverPort\" : 3306,\n  \"sid\" : \"instance001\",\n  \"sqlPrivileges\" : [ \"SELECT\", \"INSERT\", \"DELETE\" ],\n  \"startDate\" : \"2022-01-01T00:00:00\",\n  \"endDate\" : \"2022-12-31T23:59:59\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/policy/custom/access-policies/unlock?policyId=",
+							"protocol": "https",
+							"host": [
+								"{{Host}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"dbsafer",
+								"api",
+								"v1",
+								"policy",
+								"custom",
+								"access-policies",
+								"unlock"
+							],
+							"query": [
+								{
+									"key": "policyId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "연동정책(접근) 삭제",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/policy/custom/access-policies/6",
+							"protocol": "https",
+							"host": [
+								"{{Host}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"dbsafer",
+								"api",
+								"v1",
+								"policy",
+								"custom",
+								"access-policies",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "old",
+			"item": [
+				{
+					"name": "2.4사용자 그룹 수정 Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check status\",function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// // 초기 id 값 설정\r",
+									"// pm.variables.set(\"currentId\", 1235);\r",
+									"\r",
+									"// // 각 요청마다 id 값을 증가시키는 함수\r",
+									"// function increaseId() {\r",
+									"//     let currentId = pm.variables.get(\"currentId\");\r",
+									"//     currentId++;\r",
+									"//     pm.variables.set(\"currentId\", currentId);\r",
+									"// }"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\n//   \"password\" : \"cGFzc3dvcmQ=\",\n//   \"name\" : \"홍길동\",\n//   \"department\" : \"개발 2팀\",\n//   \"departmentCode\" : \"0002\",\n//   \"jobPosition\" : \"책임연구원\",\n//   \"jobTitle\" : \"팀장\",\n//   \"phoneNumber\" : \"031-2345-6789\",\n//   \"mobilePhoneNumber\" : \"010-1234-5678\",\n//   \"email\" : \"gdhong@pnpsecure.com\",\n//   \"firstAuthType\" : null,\n//   \"secondAuthType\" : null,\n//   \"comment\" : \"Sample Account\",\n//   \"startDate\" : \"2024-01-01T00:00:00\",\n//   \"endDate\" : \"2024-12-31T23:59:59\"\n// } \n\n{\n    \"password\": \"{{password}}\",\n    \"name\": \"{{name}}\",\n    \"department\": \"{{department}}\",\n    \"departmentCode\": \"{{departmentCode}}\",\n    \"jobPosition\": \"{{jobPosition}}\",\n    \"jobTitle\": \"{{jobTitle}}\",\n    \"phoneNumber\": \"{{phoneNumber}}\",\n    \"mobilePhoneNumber\": \"{{mobilePhoneNumber}}\",\n    \"email\": \"{{email}}\",\n    \"firstAuthType\": \"{{firstAuthType}}\",\n    \"secondAuthType\": \"{{secondAuthType}}\",\n    \"comment\": \"{{name}}\",\n    \"startDate\": \"{{startDate}}\",\n    \"endDate\": \"{{endDate}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/users/{{index}}",
+							"protocol": "https",
+							"host": [
+								"{{Host}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"dbsafer",
+								"api",
+								"v1",
+								"users",
+								"{{index}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "인증 API - 성능",
+			"item": [
+				{
+					"name": "1.1인증토큰 발급(100명)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// console.log(\"managerId:\", pm.variables.get(\"managerId\"));\r",
+									"// console.log(\"managerPassword:\", pm.variables.get(\"managerPassword\"));\r",
+									"\r",
+									"// var json_data = JSON.parse(responseBody);\r",
+									"// pm.collectionVariables.set(\"managerId\", json_data.managerId)\r",
+									"// pm.collectionVariables.set(\"managerPassword\", json_data.managerPassword)\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var json_data = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"AccessToken\", json_data.accessToken)",
+									"console.log(json_data)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"managerId\": \"{{managerId}}\",\n    \"managerPassword\": \"{{managerPassword}}\" \n}\n\n// {\n//     \"managerId\": \"admin\",\n//     \"managerPassword\": \"YWRtaW4wMDc=\" \n// }\n\n\n// {\n//     \"managerId\": \"test1\",\n//     \"managerPassword\": \"ZGJzYWZlcjAwKSk=\" \n// }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{Host}}:{{Port}}/dbsafer/api/v1/auth/token",
+							"protocol": "https",
+							"host": [
+								"{{Host}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"dbsafer",
+								"api",
+								"v1",
+								"auth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"let host = pm.collectionVariables.get('Host');",
+					"let port = pm.collectionVariables.get('Port');",
+					"let mgrid = pm.collectionVariables.get('ManagerID');",
+					"let mgrpw = pm.collectionVariables.get('ManagerPW');",
+					"let urlConcatenation = `http://${host}:${port}/dbsafer/api/v1/auth/token`;",
+					"",
+					"pm.sendRequest({",
+					"    url: urlConcatenation,",
+					"    method: 'POST',",
+					"    header: {",
+					"        'Content-Type': 'application/json',",
+					"        'Accept': '*/*'",
+					"    },",
+					"    body: {",
+					"        mode: 'raw',",
+					"        raw: JSON.stringify({",
+					"            \"managerId\": mgrid,",
+					"            \"managerPassword\": mgrpw",
+					"        })",
+					"    }",
+					"}, function(err, res) {",
+					"    if (err) {",
+					"        console.error(err);",
+					"    } else {",
+					"        try {",
+					"            let res_data = res.json();",
+					"            if (res_data.accessToken) {",
+					"                pm.collectionVariables.set('AccessToken', res_data.accessToken);",
+					"                // console.log('Access Token:', res_data.accessToken);",
+					"                // console.log('Hello World!');",
+					"            } else {",
+					"                console.error('Access Token not found in the response');",
+					"            }",
+					"        } catch (error) {",
+					"            console.error('Error parsing response JSON:', error);",
+					"        }",
+					"    }",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "Host",
+			"value": "192.168.104.60",
+			"type": "string"
+		},
+		{
+			"key": "Port",
+			"value": "3182",
+			"type": "string"
+		},
+		{
+			"key": "ManagerID",
+			"value": "admin",
+			"type": "string"
+		},
+		{
+			"key": "ManagerPW",
+			"value": "YWRtaW4wMDc=",
+			"type": "string"
+		},
+		{
+			"key": "AccessToken",
+			"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwiaWF0IjoxNzA1NjM3NDcxLCJleHAiOjE3MDU2MzkyNzF9.pJwVa8UbU29v7DGVsr-8xgu6eENurmSweOdhN0uXX-M",
+			"type": "string"
+		},
+		{
+			"key": "ClientID",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "AccessToken(v2)",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refreshToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "SecretKey",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
